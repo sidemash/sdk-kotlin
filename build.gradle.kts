@@ -1,4 +1,3 @@
-
 group = "com.sidemash"
 version = "1.0.0-SNAPSHOT"
 
@@ -11,7 +10,7 @@ plugins {
 
 
 repositories {
-    //jcenter()
+    jcenter()
     mavenCentral()
     gradlePluginPortal() // To use 'maven-publish' and 'signing' plugins in our own plugin
 }
@@ -25,9 +24,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1")
 }
 
-val sonatypeUsername: String? = System.getenv("SONATYPE_USERNAME")
-val sonatypePassword: String? = System.getenv("SONATYPE_PASSWORD")
-//val repositoryId: String? = System.getenv("SONATYPE_REPOSITORY_ID")
+val sonatypeUsername: String? by project
+val sonatypePassword: String? by project
+val repositoryId: String? by project
 
 // Empty javadoc
 val javadocJar = tasks.register("javadocJar", Jar::class.java) {
@@ -39,8 +38,7 @@ publishing {
         repositories {
             maven {
                 name="oss"
-                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                //val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
+                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
                 val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
                 credentials {
@@ -79,13 +77,10 @@ publishing {
             }
         }
     }
-
 }
+
 signing {
-    useInMemoryPgpKeys(
-        System.getenv("GPG_PRIVATE_KEY"),
-        System.getenv("GPG_PRIVATE_PASSWORD")
-    )
+    useGpgCmd()
     sign(publishing.publications)
 }
 
