@@ -7,7 +7,7 @@ plugins {
     //kotlin("multiplatform") version "1.4.31"
     id("maven-publish")
     id("signing")
-
+    id("java")
 }
 
 
@@ -87,4 +87,9 @@ signing {
         System.getenv("GPG_PRIVATE_PASSWORD")
     )
     sign(publishing.publications)
+}
+
+configure<JavaPluginExtension> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
