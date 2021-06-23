@@ -4,7 +4,6 @@ version = "1.0.0-SNAPSHOT"
 
 plugins {
     kotlin("multiplatform") version "1.3.61"
-    //kotlin("multiplatform") version "1.4.31"
     id("maven-publish")
     id("signing")
     id("java")
@@ -28,7 +27,7 @@ dependencies {
 
 val sonatypeUsername: String? = System.getenv("SONATYPE_USERNAME")
 val sonatypePassword: String? = System.getenv("SONATYPE_PASSWORD")
-val repositoryId: String? = System.getenv("SONATYPE_REPOSITORY_ID")
+//val repositoryId: String? = System.getenv("SONATYPE_REPOSITORY_ID")
 
 // Empty javadoc
 val javadocJar = tasks.register("javadocJar", Jar::class.java) {
@@ -40,7 +39,8 @@ publishing {
         repositories {
             maven {
                 name="oss"
-                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
+                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                //val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
                 val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
                 credentials {
@@ -61,10 +61,10 @@ publishing {
                     }
                 }
                 url.set("http://sidemash.com")
-//                issueManagement {
-//                    system.set("Github")
-//                    url.set("https://github.com/Kodein-Framework/Kodein-DI/issues")
-//                }
+                issueManagement {
+                    system.set("Github")
+                    url.set("https://github.com/sidemash/sdk-kotlin/issues")
+                }
                 scm {
                     connection.set("https://github.com/sidemash/sdk-kotlin.git")
                     url.set("https://github.com/sidemash/sdk-kotlin")
@@ -93,3 +93,8 @@ configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+tasks.wrapper {
+    gradleVersion = "7.1"
+}
+
